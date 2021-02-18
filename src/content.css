@@ -1,0 +1,147 @@
+/* 禁用鼠标选择文本 */
+
+div {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+
+/* 下拉框最大高度 */
+
+.ivu-auto-complete.ivu-select-dropdown {
+    max-height: 170px;
+}
+
+
+/* 设置全局字体 */
+
+body {
+    -webkit-app-region: no-drag;
+    font-family: "Microsoft YaHei" !important;
+}
+
+
+/* 去掉表格下面的阴影 */
+
+.ivu-table:before,
+.ivu-table-border:after {
+    background-color: transparent !important;
+}
+
+.ivu-tabs .ivu-tabs-tabpane {
+    padding: 5px;
+}
+
+
+/* 设置输入框在禁用状态下不改变背景颜色 */
+
+.ivu-input[disabled],
+fieldset[disabled] .ivu-input {
+    background-color: #FFF !important;
+}
+
+
+/* 设置下拉框在禁用状态下不改变背景颜色 */
+
+.ivu-select-disabled .ivu-select-selection {
+    background-color: #FFF !important;
+}
+
+
+/* iview 全局样式修改 */
+
+.ivu-col-span-12 {
+    height: 40px;
+}
+
+.ivu-radio-large .ivu-radio-wrapper,
+.ivu-radio-large .ivu-radio-wrapper {
+    font-size: 15px;
+}
+
+
+/* 设置表格圆角 */
+
+.ivu-table-wrapper {
+    border: 1px solid #d1d2d6;
+    border-radius: 6px;
+}
+
+.ivu-tag {
+    font-size: 15px;
+}
+
+.ivu-input-number {
+    width: 110px;
+}
+
+.ivu-modal-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ivu-modal-body {
+    padding: 0 20px;
+    font-size: 15px;
+}
+
+.ivu-modal {
+    top: 0;
+}
+
+.ivu-list-item-action {
+    font-size: 1px;
+}
+
+.ivu-modal-header,
+.ivu-modal-footer {
+    border: 0;
+}
+
+.ivu-collapse-content>.ivu-collapse-content-box {
+    padding-bottom: 10px;
+}
+
+
+/* 禁用滚动条 */
+
+::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+
+/* 文件三步设置的样式 */
+
+.tabs-style {
+    height: 390px;
+    width: 820px;
+}
+
+
+/* 设置菜单右侧的操作区样式 */
+
+.menu-style {
+    height: 460px;
+    width: 650px;
+}
+
+
+/* 选项间相互切换的设置 */
+
+.framework {
+    margin: 0 auto;
+}
+
+.framework>.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab {
+    border: none;
+    background-color: transparent;
+}
+
+.framework>.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar {
+    height: 0px;
+    margin: 0px;
+    border-bottom: none;
+}
