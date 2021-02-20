@@ -1,10 +1,11 @@
 /* 禁用鼠标选择文本 */
 
-div {
+
+/* div {
     cursor: default;
     user-select: none;
     -webkit-user-select: none;
-}
+} */
 
 
 /* 下拉框最大高度 */
@@ -17,6 +18,9 @@ div {
 /* 设置全局字体 */
 
 body {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
     -webkit-app-region: no-drag;
     font-family: "Microsoft YaHei" !important;
 }
@@ -64,7 +68,7 @@ fieldset[disabled] .ivu-input {
 /* 设置表格圆角 */
 
 .ivu-table-wrapper {
-    border: 1px solid #d1d2d6;
+    border: 1px solid #dcdee2;
     border-radius: 6px;
 }
 
@@ -118,6 +122,13 @@ fieldset[disabled] .ivu-input {
 .tabs-style {
     height: 390px;
     width: 820px;
+}
+
+
+/* 列表的边距 */
+
+.ivu-list-small .ivu-list-item {
+    padding-left: 8px;
 }
 
 

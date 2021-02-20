@@ -1,6 +1,7 @@
 module.exports = {
     pluginOptions: {
         electronBuilder: {
+            nodeIntegration: true,
             builderOptions: {
                 appId: "com.github.tran4f",
                 win: {

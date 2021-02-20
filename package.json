@@ -4,7 +4,6 @@
     "private": true,
     "author": "王帅",
     "description": "tran4f UI",
-    "icon": "assets/tran4f.ico",
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
@@ -20,7 +19,8 @@
         "babel-plugin-import": "^1.13.3",
         "core-js": "^3.6.5",
         "view-design": "^4.5.0",
-        "vue": "^2.6.11"
+        "vue": "^2.6.11",
+        "vuex": "^3.6.2"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "~4.5.0",
