@@ -1,14 +1,14 @@
 import Vue from 'vue'
-import './content.css'
+import './assets/content.css'
 import 'view-design/dist/styles/iview.css'
 
 import {
-    Row,
     Col,
+    Row,
     Tag,
     Card,
-    Menu,
     Form,
+    Menu,
     Tabs,
     Step,
     List,
@@ -46,60 +46,60 @@ import {
     TimelineItem,
     AutoComplete,
     DropdownMenu
-} from 'view-design';
+} from 'view-design'
 
-Vue.prototype.$Modal = Modal;
+Vue.prototype.$Modal = Modal
 
-Vue.prototype.$Message = Message;
+Vue.prototype.$Message = Message
 Vue.prototype.$Message.config({
     top: 75,
     duration: 2
-});
+})
 
-Vue.component('Row', Row);
-Vue.component('Tag', Tag);
-Vue.component('i-col', Col);
-Vue.component('Card', Card);
-Vue.component('Menu', Menu);
-Vue.component('List', List);
-Vue.component('Tabs', Tabs);
-Vue.component('Form', Form);
-Vue.component('Step', Step);
-Vue.component('Icon', Icon);
-Vue.component('Cell', Cell);
-Vue.component('Panel', Panel);
-Vue.component('Alert', Alert);
-Vue.component('Table', Table);
-Vue.component('Radio', Radio);
-Vue.component('Input', Input);
-Vue.component('Modal', Modal);
-Vue.component('Badge', Badge);
-Vue.component('Steps', Steps);
-Vue.component('Drawer', Drawer);
-Vue.component('Select', Select);
-Vue.component('Option', Option);
-Vue.component('Poptip', Poptip);
-Vue.component('Button', Button);
-Vue.component('i-switch', Switch);
-Vue.component('TabPane', TabPane);
-Vue.component('Divider', Divider);
-Vue.component('ListItem', List.Item);
-Vue.component('Dropdown', Dropdown);
-Vue.component('FormItem', FormItem);
-Vue.component('Checkbox', Checkbox);
-Vue.component('Collapse', Collapse);
-Vue.component('MenuItem', MenuItem);
-Vue.component('Transfer', Transfer);
-Vue.component('Timeline', Timeline);
-Vue.component('MenuGroup', MenuGroup);
-Vue.component('CellGroup', CellGroup);
-Vue.component('RadioGroup', RadioGroup);
-Vue.component('ButtonGroup', ButtonGroup);
-Vue.component('InputNumber', InputNumber);
-Vue.component('TimelineItem', TimelineItem);
-Vue.component('AutoComplete', AutoComplete);
-Vue.component('ListItemMeta', List.Item.Meta);
-Vue.component('DropdownMenu', DropdownMenu);
+Vue.component('Row', Row)
+Vue.component('Tag', Tag)
+Vue.component('Card', Card)
+Vue.component('Menu', Menu)
+Vue.component('List', List)
+Vue.component('Tabs', Tabs)
+Vue.component('Form', Form)
+Vue.component('Step', Step)
+Vue.component('Icon', Icon)
+Vue.component('Cell', Cell)
+Vue.component('i-col', Col)
+Vue.component('Panel', Panel)
+Vue.component('Alert', Alert)
+Vue.component('Table', Table)
+Vue.component('Radio', Radio)
+Vue.component('Input', Input)
+Vue.component('Modal', Modal)
+Vue.component('Badge', Badge)
+Vue.component('Steps', Steps)
+Vue.component('Drawer', Drawer)
+Vue.component('Select', Select)
+Vue.component('Option', Option)
+Vue.component('Poptip', Poptip)
+Vue.component('Button', Button)
+Vue.component('TabPane', TabPane)
+Vue.component('Divider', Divider)
+Vue.component('i-switch', Switch)
+Vue.component('Dropdown', Dropdown)
+Vue.component('FormItem', FormItem)
+Vue.component('Checkbox', Checkbox)
+Vue.component('Collapse', Collapse)
+Vue.component('MenuItem', MenuItem)
+Vue.component('Transfer', Transfer)
+Vue.component('Timeline', Timeline)
+Vue.component('ListItem', List.Item)
+Vue.component('MenuGroup', MenuGroup)
+Vue.component('CellGroup', CellGroup)
+Vue.component('RadioGroup', RadioGroup)
+Vue.component('ButtonGroup', ButtonGroup)
+Vue.component('InputNumber', InputNumber)
+Vue.component('TimelineItem', TimelineItem)
+Vue.component('AutoComplete', AutoComplete)
+Vue.component('DropdownMenu', DropdownMenu)
+Vue.component('ListItemMeta', List.Item.Meta)
 
 Vue.config.productionTip = false
 
@@ -107,123 +107,150 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const _push = (data, obj) => {
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].value == obj.value) return false;
+const _push = (arr, val) => {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].value == val.value) return;
     }
-    data.push(obj);
-    return true;
+    arr.push(val);
 }
 
 const _delete = (data, keys, test) => {
-    if (keys.length > 0) {
-        Outer: for (let i = 0; i < data.length; i++) {
-            let a = data[i];
-            for (let j = 0; j < keys.length; j++) {
-                let b = keys[j];
-                if (test(a, b)) {
-                    data.splice(i--, 1);
-                    keys.splice(j--, 1);
-                    continue Outer;
-                }
-            }
-            if (keys.length == 0) {
-                break;
+    if (keys.length <= 0) return;
+    data.forEach((e, i, array) => {
+        for (let j = 0; j < keys.length; j++) {
+            if (test(e, keys[j])) {
+                array.splice(i--, 1);
+                keys.splice(j--, 1);
             }
         }
-    }
+        if (keys.length == 0) {
+            return;
+        }
+    });
 }
 
 const store = new Vuex.Store({
     state: {
-        encrypt: null,
-        sequence: null,
-        operator: null,
-        integrate: null,
-        poptip: false, // 气泡提示的开关
-        history: true, // 历史记录相关设置的开关
-        delay: false, // 自动（延时）停止选项的开关
-        operateMode: 0, // 操作模式序号
-        encryptMethod: null,
-        operateMethod: null, // 操作方式实体类的名称
-        sequenceMethod: null, // 扩展操作实体类的名称
-        integrateMethod: null, // 文件整合实体类的名称
-        time: 10, // 延迟时间大小
-        lines: 10, // 历史记录保存条数
-        merge: 100, // 任务合并的数值
-        transferFolder: [],
-        outputFolderIndices: [],
-        regexDatas: [],
-        mode: [{
-                name: "复制",
-                detail: "将导入文件夹目录中的文件复制到导出文件夹目录中，如果文件名重复会提醒选择处理策略",
-            },
-            {
-                name: "删除",
-                detail: "删除导入文件及目录中的所有文件（文件夹）",
-            },
-            {
-                name: "移动",
-                detail: "将文件从导入文件夹目录移动到导出文件夹目录（源目录中的文件将不存在）",
-            },
-            {
-                name: "跳过",
-                detail: "在文件复制过程中如果导出文件夹目录中包含同名文件，则跳过复制导入文件夹目录中的文件",
-            },
-            {
-                name: "替换",
-                detail: "使用导入文件夹目录中的文件替换导出文件夹目录中的同名文件",
-            },
-            {
-                name: "新建",
-                detail: "对导入文件夹目录中的文件进行重命名后新建在导出文件夹目录",
-            },
-            {
-                name: "整理",
-                detail: "对导入文件夹目录的一些文件进行整理后写入导出文件夹目录",
-            },
-            {
-                name: "修改",
-                detail: "只对导入文件夹目录中的文件名称进行统一的修改操作",
-            },
-            {
-                name: "加密",
-                detail: "对导入文件夹目录的文件进行加密后写入导出文件夹目录",
-            },
-        ],
-        suffixes: [
-            "\\.docx",
-            "\\.pptx",
-            "\\.xlsx",
-            "\\.doc",
-            "\\.ppt",
-            "\\.xls",
-            "\\.jpg",
-            "\\.png",
-            "\\.gif",
-            "\\.mp3",
-            "\\.mp4",
-            "\\.pdf",
-            "\\.txt"
-        ]
+        configs: {
+            // 气泡提示的开关
+            poptip: true,
+            // 历史记录相关设置的开关
+            history: true,
+            // 自动（延时）停止选项的开关
+            delay: false,
+            // 延迟时间大小
+            time: 10,
+            // 历史记录保存条数
+            lines: 10,
+            // 任务合并的数值
+            merge: 100,
+            // 文件后缀名
+            suffixes: [
+                "\\.docx",
+                "\\.pptx",
+                "\\.xlsx",
+                "\\.doc",
+                "\\.ppt",
+                "\\.xls",
+                "\\.jpg",
+                "\\.png",
+                "\\.gif",
+                "\\.mp3",
+                "\\.mp4",
+                "\\.pdf",
+                "\\.txt"
+            ],
+            modules: [
+                // {
+                //     name: "tran4f.config",
+                //     detail: "应用基本程序框架"
+                // }
+            ]
+        },
+        options: {
+            // 操作模式序号
+            operateMode: 0,
+            // 正则表达式列表
+            regexDatas: [],
+            // 所有文件目录
+            transferFolder: [],
+            // 导出文件目录索引
+            outputFolderIndices: [],
+            // 加密实体类的名称
+            encryptMethod: null,
+            // 操作方式实体类的名称
+            operateMethod: null,
+            // 扩展操作实体类的名称
+            sequenceMethod: null,
+            // 文件整合实体类的名称
+            integrateMethod: null
+        },
+        service: {
+            encrypt: [],
+            sequence: [],
+            operator: [],
+            integrate: [],
+            mode: [{
+                    name: "复制",
+                    detail: "将导入文件夹目录中的文件复制到导出文件夹目录中，如果文件名重复会提醒选择处理策略"
+                },
+                {
+                    name: "删除",
+                    detail: "删除导入文件及目录中的所有文件（文件夹）"
+                },
+                {
+                    name: "移动",
+                    detail: "将文件从导入文件夹目录移动到导出文件夹目录（源目录中的文件将不存在）"
+                },
+                {
+                    name: "跳过",
+                    detail: "在文件复制过程中如果导出文件夹目录中包含同名文件，则跳过复制导入文件夹目录中的文件"
+                },
+                {
+                    name: "替换",
+                    detail: "使用导入文件夹目录中的文件替换导出文件夹目录中的同名文件"
+                },
+                {
+                    name: "新建",
+                    detail: "对导入文件夹目录中的文件进行重命名后新建在导出文件夹目录"
+                },
+                {
+                    name: "整理",
+                    detail: "对导入文件夹目录的一些文件进行整理后写入导出文件夹目录"
+                },
+                {
+                    name: "修改",
+                    detail: "只对导入文件夹目录中的文件名称进行统一的修改操作"
+                },
+                {
+                    name: "加密",
+                    detail: "对导入文件夹目录的文件进行加密后写入导出文件夹目录"
+                }
+            ]
+        },
+        program: {
+            start: false
+        }
     },
     mutations: {
-        source(state, obj) {
-            return _push(state.transferFolder, obj)
+        push(state, data) {
+            return _push(state.transferFolder, data)
         },
-        addRegExp(state, obj) {
-            return _push(state.regexDatas, obj)
+        remove(state, keys) {
+            _delete(state.transferFolder, keys, (a, b) => a.key == b);
         },
-        delRegExp(state, obj) {
-            _delete(state.regexDatas, obj, function(a, b) {
-                return a.key === b.key && a.value === b.value;
-            });
+        clear(state) {
+            console.log(state)
+                //_delete(state.options.transferFolder, state.options.outputFolderIndices, (a, b) => a.key == b);
         },
-        suffix(state, obj) {
-            return _push(state.suffixes, obj)
+        addRegExp(state, val) {
+            return _push(state.regexDatas, val)
+        },
+        delRegExp(state, val) {
+            _delete(state.regexDatas, val, (a, b) => a.key === b.key && a.value === b.value);
         },
         update(state, payload) {
-            state[payload.name] = payload.value
+            state.options[payload.name] = payload.value
         }
     }
 })
@@ -231,6 +258,7 @@ const store = new Vuex.Store({
 import axios from 'axios'
 
 axios.defaults.baseURL = 'http://localhost:1028/'
+
 Vue.prototype.$axios = axios
 
 import App from './App.vue'
