@@ -8,9 +8,7 @@ module.exports = {
                     icon: "./public/favicon.ico",
                     target: [{
                         target: "nsis",
-                        arch: [
-                            "x64",
-                        ]
+                        arch: ["x64"]
                     }]
                 },
                 nsis: {
