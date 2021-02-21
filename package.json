@@ -1,8 +1,8 @@
 {
     "name": "tran4f",
     "version": "1.0.0",
-    "private": true,
     "author": "王帅",
+    "license": "MIT",
     "description": "tran4f UI",
     "scripts": {
         "serve": "vue-cli-service serve",
