@@ -4,9 +4,10 @@
             <Button type="primary" size="small">添加模组</Button>&nbsp;
             <Button type="primary" size="small">重新加载</Button>
         </template>
+        <p v-if="modules.length == 0" style="text-align:center">没有可用的模组</p>
         <List size="small">
-            <ListItem v-for="item in modules" :key="item.name">
-                <ListItemMeta :title="item.name" :description="item.detail" />
+            <ListItem v-for="e in modules" :key="e.name">
+                <ListItemMeta :title="e.name" :description="e.detail" />
                 <template slot="action">
                     <li>
                         <Button type="primary" size="small">查看</Button>&nbsp;
@@ -20,12 +21,9 @@
 
 <script>
     export default {
-        data() {
-            return {
-                modules: [{
-                    name: "tran4f.config",
-                    detail: "应用基本程序框架"
-                }]
+        computed: {
+            modules() {
+                return this.$store.state.configs.modules
             }
         }
     }

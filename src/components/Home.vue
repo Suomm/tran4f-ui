@@ -8,20 +8,20 @@
         <div class="framework tabs-style">
             <Tabs v-model="index" type="card" name="center">
                 <TabPane tab="center">
-                    <Entries />
+                    <Entries @on-click="add" />
                 </TabPane>
                 <TabPane tab="center">
-                    <Pattern />
+                    <Design @on-cancel="cancel" />
                 </TabPane>
                 <TabPane tab="center">
                     <Folders />
                 </TabPane>
                 <TabPane tab="center">
-                    <Dashboard />
+                    <Dashboard @on-start="left=true" @on-stop="left=false"/>
                 </TabPane>
             </Tabs>
         </div>
-        <ButtonGroup id="process">
+        <ButtonGroup :style="{float: 'right', marginRight: '20px', marginTop: '-45px', position:'relative'}">
             <Button type="primary" @click="pre" :disabled="left">
                 <Icon type="ios-arrow-back" />上一步
             </Button>
@@ -38,9 +38,9 @@
         mapState
     } from 'vuex'
 
+    import Design from './contents/Design.vue'
     import Entries from './contents/Entries.vue'
     import Folders from './contents/Folders.vue'
-    import Pattern from './contents/Pattern.vue'
     import Dashboard from './contents/Dashboard.vue'
 
     export default {
@@ -56,12 +56,14 @@
             next() {
                 switch (this.steps) {
                     case 0:
-                        if (this.regexDatas.length == 0) {
+                        if (this.options.regexDatas.length == 0) {
                             this.$Message.error({
                                 background: true,
                                 content: "正则表达式列表不能为空！"
                             });
                         } else {
+                            if (this.options.operateMode == 1)
+                                this.$store.commit('clear')
                             this.index = 2;
                             this.left = false;
                             this.steps++;
@@ -69,16 +71,16 @@
                         break;
                     case 1:
                         if (
-                            this.outputFolderIndices.length == 0 &&
-                            this.operateMode != 1
+                            this.options.outputFolderIndices.length == 0 &&
+                            this.options.operateMode != 1
                         ) {
                             this.$Message.error({
                                 background: true,
                                 content: "导入文件夹目录不能为空！"
                             });
                         } else if (
-                            this.transferFolder.length ==
-                            this.outputFolderIndices.length
+                            this.options.transferFolder.length ==
+                            this.options.outputFolderIndices.length
                         ) {
                             this.$Message.error({
                                 background: true,
@@ -105,13 +107,21 @@
                         break;
                 }
             },
+            add() {
+                this.index = 1;
+                this.right = true;
+            },
+            cancel() {
+                this.index = 0;
+                this.right = false;
+            }
         },
         components: {
+            Design,
             Entries,
             Folders,
-            Pattern,
             Dashboard
         },
-        computed: mapState(['operateMode', 'regexDatas', 'transferFolder', 'outputFolderIndices'])
+        computed: mapState(['options'])
     }
 </script>

@@ -1,8 +1,11 @@
 <template>
     <div>
-        <Transfer :data="$store.state.transferFolder" :target-keys="$store.state.outputFolderIndices"
-            :list-style="{ height: '330px', width: '374px' }" :titles="['导出文件夹目录', '导入文件夹目录']" ref="files"
-            :filterable="true" :filter-method="filterMethod" :render-format="format" @on-change="handleChange">
+        <Transfer :data="$store.state.options.transferFolder" 
+            :target-keys="$store.state.options.outputFolderIndices"
+            :list-style="{ height: '330px', width: '374px' }" 
+            :titles="['导出文件夹目录', '导入文件夹目录']" ref="transfer"
+            :filterable="true" :filter-method="filterMethod" 
+            :render-format="format" @on-change="handleChange">
             <div class="blank"></div>
         </Transfer>
         <div class="left">
@@ -22,18 +25,11 @@
     const {
         dialog
     } = require('electron').remote;
-    export default {
-        data() {
 
-        },
-        watch: {
-            operateMode: function () {
-                if (this.operateMode == 1) this.$store.commit('clear')
-            },
-        },
+    export default {
         methods: {
             handleChange(newTargetKeys) {
-                this.$store.state.outputFolderIndices = newTargetKeys
+                this.$store.state.options.outputFolderIndices = newTargetKeys
             },
             filterMethod(data, query) {
                 return data.value.indexOf(query) > -1;
@@ -55,7 +51,7 @@
                 });
             },
             left_remove() {
-                this.$store.commit('remove', this.$refs.files.leftCheckedKeys)
+                this.$store.commit('remove', this.$refs.transfer.leftCheckedKeys)
             },
             right_push() {
                 if (this.operateMode == 1) {
@@ -78,7 +74,7 @@
                 }
             },
             right_remove() {
-                // var parent = this.$refs.files;
+                // var parent = this.$refs.transfer;
                 // let keys = [...parent.rightCheckedKeys];
                 // _delete(parent.data, parent.rightCheckedKeys, function (a, b) {
                 //   return a.key == b;

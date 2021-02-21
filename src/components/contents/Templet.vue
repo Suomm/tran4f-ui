@@ -1,7 +1,7 @@
 <template>
     <Form label-position="top">
         <FormItem label="请选择模板文件类型：">
-            <RadioGroup size="large" v-model="outer">
+            <RadioGroup size="large" v-model="type">
                 <Radio :label="0">
                     <span>配置文件</span>
                 </Radio>
@@ -20,7 +20,7 @@
             </RadioGroup>
         </FormItem>
         <FormItem label="请选择模板文件位置：">
-            <Tag v-show="board" color="blue">您已成功导入{{ path }}</Tag>
+            <Tag v-show="complete" color="blue">您已成功导入{{ path }}</Tag>
             <Input v-model="path" placeholder="请选择模板文件位置" />
             <div class="footer">
                 <Button type="primary" @click="openFile">浏览</Button>&nbsp;
@@ -37,9 +37,9 @@
         name: "Templet",
         data() {
             return {
-                outer: 0, // 导出模板文件的类型
-                board: false, // 导入模板成功提示
-                path: null, // 用户选入的模板文件地址
+                type: 0,
+                path: null,
+                complete: false
             }
         },
         methods: {
@@ -54,7 +54,7 @@
             },
             output() {
                 let obj = {};
-                switch (this.outer) {
+                switch (this.type) {
                     case 0: // 配置文件
                         if (
                             this.settings.transferFolder.length == 0 ||
@@ -100,7 +100,7 @@
                         break;
                 }
                 // application.writeJSON(JSON.stringify(obj));
-                this.board = true;
+                this.complete = true;
             },
             reset() {
                 try {
@@ -109,7 +109,7 @@
                     for (var i in obj) {
                         this.settings[i] = obj[i];
                     }
-                    this.board = true;
+                    this.complete = true;
                 } catch (e) {
                     this.showMsg(false, "这不是一个有效的JSON文件！");
                 }
@@ -117,3 +117,11 @@
         }
     }
 </script>
+
+<style scoped>
+    /* 导入模板选项的按钮样式 */
+    .footer {
+        float: right;
+        margin: 10px 0px;
+    }
+</style>

@@ -6,18 +6,18 @@
         <!-- 主体 -->
         <Tabs id="content" name="MenuBar">
             <TabPane tab="MenuBar" label="文件操作" icon="md-list-box">
-                <Home @start="state=true" @stop="state=false" />
+                <Home />
             </TabPane>
-            <TabPane tab="MenuBar" label="用户设置" :disabled="state" icon="md-build">
+            <TabPane tab="MenuBar" label="用户设置" :disabled="start" icon="md-build">
                 <Settings />
             </TabPane>
-            <TabPane tab="MenuBar" label="实用工具" :disabled="state" icon="md-pricetags">
+            <TabPane tab="MenuBar" label="实用工具" :disabled="start" icon="md-pricetags">
                 <Tools />
             </TabPane>
-            <TabPane tab="MenuBar" label="模组列表" :disabled="state" icon="md-card">
+            <TabPane tab="MenuBar" label="模组列表" :disabled="start" icon="md-card">
                 <Modules />
             </TabPane>
-            <TabPane tab="MenuBar" label="关于我们" :disabled="state" icon="md-contact">
+            <TabPane tab="MenuBar" label="关于我们" :disabled="start" icon="md-contact">
                 <Contact />
             </TabPane>
         </Tabs>
@@ -33,11 +33,6 @@
     import Settings from "./components/Settings.vue"
 
     export default {
-        data() {
-            return {
-                state: false
-            }
-        },
         components: {
             Home,
             Tools,
@@ -45,6 +40,11 @@
             Contact,
             Modules,
             Settings
+        },
+        computed: {
+            start() {
+                return this.$store.state.program.start
+            }
         }
     }
 </script>
@@ -57,7 +57,7 @@
         overflow: hidden;
         border: 1px solid #2d8cf0;
     }
-
+    
     /* 用户操作区域的主要设置 */
     #content {
         width: 860px;

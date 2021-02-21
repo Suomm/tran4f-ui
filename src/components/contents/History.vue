@@ -7,6 +7,7 @@
     export default {
         data() {
             return {
+                data: [],
                 columns: [{
                         title: "文件名",
                         key: "name",
@@ -78,8 +79,7 @@
                             ]);
                         },
                     },
-                ],
-                data: [], // 历史记录回看 { name:String state:String }
+                ]
             }
         }
     }

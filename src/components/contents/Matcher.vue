@@ -15,8 +15,8 @@
         <br />
         <Card :padding="0" dis-hover bordered style="height: 350px; overflow-y: scroll">
             <CellGroup>
-                <Cell v-for="item in cells" :key="item.title" :title="item.title" :selected="item.selected">
-                    <Badge dot slot="extra" :count="item.selected ? 1 : 0" />
+                <Cell v-for="e in data" :key="e.title" :title="e.title" :selected="e.selected">
+                    <Badge dot slot="extra" :count="e.selected ? 1 : 0" />
                 </Cell>
             </CellGroup>
         </Card>
@@ -27,7 +27,7 @@
     export default {
         data() {
             return {
-                cells: [], // 测试正则文件表达式 { title:String selected:boolean }
+                data: []
             }
         }
     }

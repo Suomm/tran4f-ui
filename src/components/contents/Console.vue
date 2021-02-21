@@ -3,7 +3,8 @@
         <i-col span="20" style="height: 450px; overflow-y: scroll">
             <Timeline>
                 <transition-group name="fade">
-                    <TimelineItem v-for="(item, i) in collect" :key="i + 1" :color="item.level">{{ item.message }}
+                    <TimelineItem v-for="(e, i) in contents" :key="i + 1" :color="e.level">
+                        {{ e.message }}
                     </TimelineItem>
                 </transition-group>
             </Timeline>
@@ -12,10 +13,10 @@
             <Divider type="vertical" style="height: 450px" />
         </i-col>
         <i-col span="3">
-            <Button type="primary" @click="console.log('……')">更新</Button>
+            <Button type="primary" @click="contents = []">更新</Button>
             <br />
             <br />
-            <Button type="warning" @click="collect = []">清空</Button>
+            <Button type="warning" @click="contents = []">清空</Button>
             <br />
             <br />
             <Button>导入</Button>
@@ -30,7 +31,7 @@
     export default {
         data() {
             return {
-                collect: [], // 内部控制器内容
+                contents: []
             }
         }
     }

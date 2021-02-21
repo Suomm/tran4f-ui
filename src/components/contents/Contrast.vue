@@ -11,6 +11,7 @@
     export default {
         data() {
             return {
+                data: [],
                 columns: [{
                         title: "项目",
                         key: "name",
@@ -30,8 +31,7 @@
                             );
                         },
                     },
-                ],
-                data: [], // 配置文件信息 { name:String detial:String } <br>换行
+                ]
             }
         }
     }

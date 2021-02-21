@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <RadioGroup v-model="value" size="large" vertical>
+        <RadioGroup v-model="$store.state.options[name]" size="large" vertical>
             <Collapse class="collapse" simple accordion>
                 <Panel v-for="o in items" :key="o.title">
                     {{ o.title }}
@@ -13,13 +13,12 @@
                 </Panel>
             </Collapse>
         </RadioGroup>
-        <Button type="primary" @click="$emit('click', value)" long>进入配置选项</Button>
+        <Button type="primary" @click="$emit('click')" long>进入配置选项</Button>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'Board',
         props: {
             name: {
                 type: String,
@@ -31,21 +30,8 @@
                     return [];
                 }
             }
-        },
-        computed: {
-            value: {
-                get() {
-                    return this.$store.state[this.name]
-                },
-                set(val) {
-                    this.$store.commit('update', {
-                        name: this.name,
-                        value: val
-                    })
-                }
-            }
         }
-    };
+    }
 </script>
 
 <style scoped>

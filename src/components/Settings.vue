@@ -1,7 +1,7 @@
 <template>
     <Row :gutter="20">
         <i-col span="5">
-            <Menu width="auto" :active-name="0" @on-select="select">
+            <Menu width="auto" :active-name="0" @on-select="i => {index = i; drawer = false;}">
                 <MenuGroup title="文件">
                     <MenuItem :name="0">操作模式</MenuItem>
                     <MenuItem :name="1">复制方式</MenuItem>
@@ -31,16 +31,16 @@
                         <Mode />
                     </TabPane>
                     <TabPane tab="settings">
-                        <Board name="operateMethod" :items="$store.state.operator" @click="open" />
+                        <Board name="operateMethod" :items="service.operator" @click="open" />
                     </TabPane>
                     <TabPane tab="settings">
-                        <Board name="sequenceMethod" :items="$store.state.sequence" @click="open" />
+                        <Board name="sequenceMethod" :items="service.sequence" @click="open" />
                     </TabPane>
                     <TabPane tab="settings">
-                        <Board name="integrateMethod" :items="$store.state.integrate" @click="open" />
+                        <Board name="integrateMethod" :items="service.integrate" @click="open" />
                     </TabPane>
                     <TabPane tab="settings">
-                        <Board name="encryptMethod" :items="$store.state.encrypt" @click="open" />
+                        <Board name="encryptMethod" :items="service.encrypt" @click="open" />
                     </TabPane>
                     <TabPane tab="settings">
                         <Templet />
@@ -57,8 +57,8 @@
 <script>
     import Mode from "./contents/Mode.vue";
     import Board from "./contents/Board.vue";
-    import Configurer from "./contents/Configurer.vue";
     import Templet from "./contents/Templet.vue";
+    import Configurer from "./contents/Configurer.vue";
 
     export default {
         data() {
@@ -72,13 +72,13 @@
             }
         },
         methods: {
-            select(i) {
-                this.drawer = false
-                this.index = i
-            },
-            open(val) {
-                console.log(val)
+            open() {
                 this.drawer = true
+            }
+        },
+        computed: {
+            service() {
+                return this.$store.state.service
             }
         },
         components: {
@@ -89,11 +89,3 @@
         }
     }
 </script>
-
-<style scoped>
-    /* 导入模板选项的按钮样式 */
-    .footer {
-        float: right;
-        margin: 10px 0px;
-    }
-</style>

@@ -10,7 +10,7 @@
                 <li :key="-2">&nbsp;</li>
             </transition-group>
         </div>
-        <div :style="group">
+        <div class="controller">
             <Button type="primary" :disabled="start" @click="submit">开始</Button>
             &nbsp;
             <Button type="error" :disabled="!start" @click="stop">停止</Button>
@@ -19,18 +19,6 @@
             &nbsp;
             <Button type="warning" :disabled="start" @click="backups">备份</Button>
         </div>
-        <!-- <Modal
-            v-model="prompt"
-            title="文件复制过程中发生异常"
-            :closable="false"
-            :mask-closable="false"
-            ok-text="继续"
-            cancel-text="停止"
-            @on-ok="proceed"
-            @on-cancel="stop"
-          >
-            <p>{{ content }}</p>
-          </Modal> -->
     </div>
 </template>
 
@@ -38,15 +26,12 @@
     export default {
         data() {
             return {
-                prompt: false, // 复制文件发生异常时的提示框
-                content: "", // 复制文件发生异常时的异常信息（由Java端提供）
-                start: false, // 开始复制按钮的禁用
-                list: [], // 存储控制台的内容便于后台输出到文件
+                start: false,
+                list: []
             }
         },
         methods: {
             submit() {
-                this.$emit("start");
                 // let a = this.settings.transferFolder;
                 // let b = [...this.settings.outputFolderIndices];
                 // let c = this.settings.regexDatas;
@@ -71,11 +56,14 @@
                 //dataSource.operateMethod = this.settings.operateMethod;
                 // this.clear();
                 //application.access();
-                this.start = this.left = true;
+                this.$emit('on-start');
+                this.$store.state.program.start = true;
+                this.start = true;
             },
             stop() {
-                this.$emit("stop")
-                this.left = this.other = this.prompt = this.start = false;
+                this.$emit('on-stop');
+                this.$store.state.program.start = false;
+                this.start = false;
                 //application.stop();
             },
             clear() {
@@ -90,14 +78,6 @@
                     //application.backup(this.list);
                     this.showMsg(true, "成功将日志备份到 console.log");
                 }
-            },
-            confirm(msg) {
-                this.content = msg;
-                this.prompt = true;
-            },
-            proceed() {
-                this.prompt = false;
-                //application.unlock();
             },
             message(date, text, type) {
                 let obj = {
