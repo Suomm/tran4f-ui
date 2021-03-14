@@ -1,4 +1,4 @@
-/* 设置全局字体 */
+/* 设置全局样式 */
 
 body {
     cursor: default;
@@ -15,6 +15,9 @@ body {
 .ivu-table-border:after {
     background-color: transparent !important;
 }
+
+
+/* 选项卡设置内边距 */
 
 .ivu-tabs .ivu-tabs-tabpane {
     padding: 5px;
@@ -65,14 +68,6 @@ fieldset[disabled] .ivu-input {
 .controller {
     float: left;
     margin-top: 20px;
-}
-
-
-/* 操作模式的选项样式 */
-
-.option {
-    width: 640px;
-    margin-bottom: 10px;
 }
 
 
