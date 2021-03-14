@@ -107,33 +107,13 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const _push = (arr, val) => {
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i].value == val.value) return;
-    }
-    arr.push(val);
-}
-
-const _delete = (data, keys, test) => {
-    if (keys.length <= 0) return;
-    data.forEach((e, i, array) => {
-        for (let j = 0; j < keys.length; j++) {
-            if (test(e, keys[j])) {
-                array.splice(i--, 1);
-                keys.splice(j--, 1);
-            }
-        }
-        if (keys.length == 0) {
-            return;
-        }
-    });
-}
+import tools from './tools'
 
 const store = new Vuex.Store({
     state: {
         configs: {
             // 气泡提示的开关
-            poptip: true,
+            merge: true,
             // 历史记录相关设置的开关
             history: true,
             // 自动（延时）停止选项的开关
@@ -143,29 +123,24 @@ const store = new Vuex.Store({
             // 历史记录保存条数
             lines: 10,
             // 任务合并的数值
-            merge: 100,
+            count: 100,
             // 文件后缀名
             suffixes: [
-                "\\.docx",
-                "\\.pptx",
-                "\\.xlsx",
-                "\\.doc",
-                "\\.ppt",
-                "\\.xls",
-                "\\.jpg",
-                "\\.png",
-                "\\.gif",
-                "\\.mp3",
-                "\\.mp4",
-                "\\.pdf",
-                "\\.txt"
+                ".docx",
+                ".pptx",
+                ".xlsx",
+                ".doc",
+                ".ppt",
+                ".xls",
+                ".jpg",
+                ".png",
+                ".gif",
+                ".mp3",
+                ".mp4",
+                ".pdf",
+                ".txt"
             ],
-            modules: [
-                // {
-                //     name: "tran4f.config",
-                //     detail: "应用基本程序框架"
-                // }
-            ]
+            modules: []
         },
         options: {
             // 操作模式序号
@@ -229,28 +204,41 @@ const store = new Vuex.Store({
             ]
         },
         program: {
-            start: false
+            start: false,
+            locked: false
         }
     },
     mutations: {
-        push(state, data) {
-            return _push(state.transferFolder, data)
+        push(state, val) {
+            tools.$push(state.options.transferFolder, {
+                key: state.options.transferFolder.length,
+                value: val
+            })
+        },
+        difference(state, array) {
+            let a = new Set(array)
+            let b = state.options.outputFolderIndices
+            state.options.outputFolderIndices = b.filter(x => !a.has(x))
         },
         remove(state, keys) {
-            _delete(state.transferFolder, keys, (a, b) => a.key == b);
+            tools.$delete(state.options.transferFolder, keys, (a, b) => a.key == b);
         },
         clear(state) {
-            console.log(state)
-                //_delete(state.options.transferFolder, state.options.outputFolderIndices, (a, b) => a.key == b);
+            tools.$delete(state.options.transferFolder, state.options.outputFolderIndices, (a, b) => a.key == b);
         },
-        addRegExp(state, val) {
-            return _push(state.regexDatas, val)
+        addRegExp(state, o) {
+            tools.$push(state.options.regexDatas, o)
         },
-        delRegExp(state, val) {
-            _delete(state.regexDatas, val, (a, b) => a.key === b.key && a.value === b.value);
+        delRegExp(state, keys) {
+            tools.$delete(state.options.regexDatas, keys, (a, b) => a.value === b.value)
+            if (state.program.locked && state.options.regexDatas.length == 0) state.program.locked = false
         },
-        update(state, payload) {
-            state.options[payload.name] = payload.value
+        clearRegExp(state) {
+            state.options.regexDatas.length = 0
+            state.options.regexDatas.push({
+                key: "匹配全部",
+                value: ".+"
+            })
         }
     }
 })
