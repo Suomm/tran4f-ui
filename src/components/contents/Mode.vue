@@ -14,3 +14,11 @@
 <script>
     export default {}
 </script>
+
+<style scoped>
+    /* 操作模式的选项样式 */
+    .option {
+        width: 640px;
+        margin-bottom: 10px;
+    }
+</style>

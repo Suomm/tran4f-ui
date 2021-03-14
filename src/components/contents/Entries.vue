@@ -42,7 +42,6 @@
         },
         methods: {
             select(e, i) {
-                console.log(e);
                 this.$refs.selection.toggleSelect(i);
             }
         }

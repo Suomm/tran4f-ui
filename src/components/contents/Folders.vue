@@ -1,11 +1,8 @@
 <template>
     <div>
-        <Transfer :data="$store.state.options.transferFolder" 
-            :target-keys="$store.state.options.outputFolderIndices"
-            :list-style="{ height: '330px', width: '374px' }" 
-            :titles="['导出文件夹目录', '导入文件夹目录']" ref="transfer"
-            :filterable="true" :filter-method="filterMethod" 
-            :render-format="format" @on-change="handleChange">
+        <Transfer :data="$store.state.options.transferFolder" :target-keys="$store.state.options.outputFolderIndices"
+            :list-style="{ height: '330px', width: '374px' }" :titles="['导出文件夹目录', '导入文件夹目录']" ref="transfer"
+            :filterable="true" :filter-method="filterMethod" :render-format="format" @on-change="handleChange">
             <div class="blank"></div>
         </Transfer>
         <div class="left">
@@ -24,12 +21,14 @@
 <script>
     const {
         dialog
-    } = require('electron').remote;
+    } = require('electron').remote
+
+    import { mapState } from 'vuex'
 
     export default {
         methods: {
             handleChange(newTargetKeys) {
-                this.$store.state.options.outputFolderIndices = newTargetKeys
+                this.options.outputFolderIndices = newTargetKeys
             },
             filterMethod(data, query) {
                 return data.value.indexOf(query) > -1;
@@ -39,16 +38,12 @@
             },
             left_push() {
                 dialog.showOpenDialog({
-                    title: "请选择导入文件夹目录",
+                    title: "请选择导出文件夹目录",
                     properties: ['openDirectory']
                 }).then(ret => {
-                    if (!ret.canceled) {
-                        this.$store.commit('push', {
-                            key: this.transferFolder.length,
-                            value: ret.filePaths.pop()
-                        });
-                    }
-                });
+                    if (!ret.canceled)
+                        this.$store.commit('push', ret.filePaths.pop())
+                })
             },
             left_remove() {
                 this.$store.commit('remove', this.$refs.transfer.leftCheckedKeys)
@@ -58,32 +53,27 @@
                     this.$Message.error({
                         background: true,
                         content: "在“删除”模式下您不能向“导出文件夹目录”中添加文件夹目录！",
-                    });
+                    })
                 } else {
-                    let ret = dialog.showOpenDialog({
-                        title: "请选择导出文件夹目录",
+                    dialog.showOpenDialog({
+                        title: "请选择导入文件夹目录",
                         properties: ['openDirectory']
-                    });
-                    if (!ret.canceled) {
-                        this.$store.commit('push', {
-                            key: this.transferFolder.length,
-                            value: ret.filePaths.pop(),
-                        });
-                        this.$store.state.outputFolderIndices.push(parent.data.length - 1);
-                    }
+                    }).then(ret => {
+                        if (!ret.canceled) {
+                            this.$store.commit('push', ret.filePaths.pop())
+                            this.options.outputFolderIndices.push(this.options.transferFolder.length - 1);
+                        }
+                    })
                 }
             },
             right_remove() {
-                // var parent = this.$refs.transfer;
-                // let keys = [...parent.rightCheckedKeys];
-                // _delete(parent.data, parent.rightCheckedKeys, function (a, b) {
-                //   return a.key == b;
-                // });
-                // _delete(parent.targetKeys, keys, function (a, b) {
-                //   return a == b;
-                // });
-            },
-        }
+                var parent = this.$refs.transfer;
+                let keys = [...parent.rightCheckedKeys];
+                this.$store.commit('remove', parent.rightCheckedKeys)
+                this.$store.commit('difference', keys)
+            }
+        },
+        computed: mapState(['options'])
     }
 </script>
 

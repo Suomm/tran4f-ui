@@ -20,101 +20,113 @@
             </RadioGroup>
         </FormItem>
         <FormItem label="请选择模板文件位置：">
-            <Tag v-show="complete" color="blue">您已成功导入{{ path }}</Tag>
-            <Input v-model="path" placeholder="请选择模板文件位置" />
+            <Input v-model="fileName" placeholder="请选择模板文件位置" />
             <div class="footer">
-                <Button type="primary" @click="openFile">浏览</Button>&nbsp;
-                <Button type="primary" :disabled="path == null" @click="reset">导入</Button>&nbsp;
-                <Button type="primary" :disabled="path == null" @click="output">导出</Button>
+                <Button type="primary" @click="open">浏览</Button>&nbsp;
+                <Button type="primary" :disabled="fileName == null" @click="reset">导入</Button>&nbsp;
+                <Button type="primary" :disabled="fileName == null" @click="output">导出</Button>
             </div>
         </FormItem>
     </Form>
 </template>
 
 <script>
-    const valid = /.+\.json$/g;
+    import {
+        mapState
+    } from 'vuex'
+
+    const {
+        dialog
+    } = require('electron').remote
+    
     export default {
-        name: "Templet",
         data() {
             return {
                 type: 0,
-                path: null,
-                complete: false
+                fileName: ""
             }
         },
         methods: {
-            openFile() {
-                // let a = application.openJSONChooser();
-                let a = "";
-                if (a.length == 0 || !valid.test(a)) {
-                    this.showMsg(false, "您选择的JSON文件有误！");
-                } else {
-                    this.path = a;
-                }
+            open() {
+                dialog.showOpenDialog({
+                    properties: ['openFile'],
+                    filters: [{
+                        name: 'JSON',
+                        extensions: ['json']
+                    }]
+                }).then(ret => {
+                    if (!ret.canceled)
+                        this.fileName = ret.filePaths.pop()
+                })
             },
             output() {
-                let obj = {};
+                let obj = {}
                 switch (this.type) {
                     case 0: // 配置文件
                         if (
-                            this.settings.transferFolder.length == 0 ||
-                            this.settings.regexDatas.length == 0
+                            this.options.transferFolder.length == 0 ||
+                            this.options.regexDatas.length == 0
                         ) {
-                            this.showMsg(false, "请按要求完成模板后再导出！");
+                            this.$Message.error({
+                                background: true,
+                                content: "请按要求完成模板后再导出！"
+                            })
                         } else {
-                            obj = this.settings;
+                            obj["options"] = this.options
+                            obj["configs"] = this.configs
                         }
                         break;
                     case 1: // 用户设置
-                        obj.operateMethod = this.settings.operateMethod;
-                        obj.operateMode = this.settings.operateMode;
-                        obj.suffixes = this.settings.suffixes;
-                        obj.poptip = this.settings.poptip;
+                        obj["configs"] = this.configs
                         break;
                     case 2: // 正则表达式
-                        if (this.settings.regexDatas.length == 0) {
-                            this.showMsg(false, "请按要求完成模板后再导出！");
+                        if (this.options.regexDatas.length == 0) {
+                            this.$Message.error({
+                                background: true,
+                                content: "请按要求完成模板后再导出！"
+                            })
                         } else {
-                            obj.regexDatas = this.settings.regexDatas;
+                            obj["options"] = {
+                                "regexDatas": this.options.regexDatas
+                            }
                         }
                         break;
                     case 3: // 文件夹目录
-                        if (this.settings.transferFolder.length == 0) {
-                            this.showMsg(false, "请按要求完成模板后再导出！");
+                        if (this.options.transferFolder.length == 0) {
+                            this.$Message.error({
+                                background: true,
+                                content: "请按要求完成模板后再导出！"
+                            })
                         } else {
-                            obj.transferFolder = this.settings.transferFolder;
-                            obj.outputFolderIndices = this.settings.outputFolderIndices;
+                            obj["options"] = {
+                                "transferFolder": this.options.transferFolder,
+                                "outputFolderIndices": this.options.outputFolderIndices
+                            }
                         }
                         break;
                     case 4: // 表达式与目录
                         if (
-                            this.settings.transferFolder.length == 0 ||
-                            this.settings.regexDatas.length == 0
+                            this.options.transferFolder.length == 0 ||
+                            this.options.regexDatas.length == 0
                         ) {
-                            this.showMsg(false, "请按要求完成模板后再导出！");
+                            this.$Message.error({
+                                background: true,
+                                content: "请按要求完成模板后再导出！"
+                            })
                         } else {
-                            obj.transferFolder = this.settings.transferFolder;
-                            obj.outputFolderIndices = this.settings.outputFolderIndices;
-                            obj.regexDatas = this.settings.regexDatas;
+                            obj["options"] = {
+                                "transferFolder": this.options.transferFolder,
+                                "outputFolderIndices": this.options.outputFolderIndices,
+                                "regexDatas": this.options.regexDatas
+                            }
                         }
                         break;
                 }
-                // application.writeJSON(JSON.stringify(obj));
-                this.complete = true;
+                console.log(obj)
             },
-            reset() {
-                try {
-                    // this.readJSON(application.toJSONString());
-                    let obj = JSON.parse({});
-                    for (var i in obj) {
-                        this.settings[i] = obj[i];
-                    }
-                    this.complete = true;
-                } catch (e) {
-                    this.showMsg(false, "这不是一个有效的JSON文件！");
-                }
-            },
-        }
+            reset() {}
+        },
+        computed: mapState(['options', 'configs'])
     }
 </script>
 

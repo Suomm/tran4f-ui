@@ -108,8 +108,15 @@
                 }
             },
             add() {
-                this.index = 1;
-                this.right = true;
+                if (this.program.locked) {
+                    this.$Message.error({
+                        background: true,
+                        content: "您开启了“匹配全部”模式，不能再添加正则表达式了！"
+                    })
+                } else {
+                    this.index = 1
+                    this.right = true
+                }
             },
             cancel() {
                 this.index = 0;
@@ -122,6 +129,6 @@
             Folders,
             Dashboard
         },
-        computed: mapState(['options'])
+        computed: mapState(['options', 'program'])
     }
 </script>

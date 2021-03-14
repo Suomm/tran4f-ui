@@ -15,7 +15,7 @@
                 <Row :gutter="220">
                     <i-col span="12">
                         <FormItem label="文件名类型" :style="{marginBottom: '5px'}">
-                            <Select v-model="item" @on-change="selectChange">
+                            <Select v-model="item" @on-change="change">
                                 <Option v-for="(e, i) in model" :value="i" :key="i">
                                     {{ e }}
                                 </Option>
@@ -71,10 +71,14 @@
     const STATEMENT_2 = "请输入连接符和统一的标题名称，例如：（：标题）"
     const STATEMENT_3 = "请输入统一的文件或目录的名称"
     const STATEMENT_4 = "此选项下不需要再输入额外的内容"
-    const WHOLE = {
-        key: "匹配全部",
-        value: ".+"
-    }
+
+    const DIGIT = "\\d+"
+    const LETTER = "[a-zA-Z]+"
+    const CHARACTERS = "[\\u4e00-\\u9fa5]+"
+
+    const {
+        dialog
+    } = require('electron').remote
 
     export default {
         data() {
@@ -97,8 +101,6 @@
                 origin: true,
                 // 自动生成正则表达式选项中用户选择的文件名称
                 fileName: "",
-                // 是否开启了匹配全部文件的选项
-                lock: false,
                 // 自定义表达式支持的比配模型
                 model: [
                     "标题与姓名",
@@ -114,81 +116,111 @@
         },
         methods: {
             accept() {
-                if (this.lock) {
-                    this.$Message.error({
-                        background: true,
-                        content: "您开启了“匹配全部”模式，不能再添加正则表达式了！",
-                    })
-                } else {
-                    switch (this.type) {
-                        case 0: // 用户自定义
-                            if (this.item < 5 && this.title.length == 0) {
-                                this.$Message.error({
-                                    background: true,
-                                    content: "请输入标题名称和连接符！",
-                                });
-                            } else if (this.item == 5 && !this.origin) {
-                                this.$Message.error({
-                                    background: true,
-                                    content: "匹配源为文件时才能使用匹配文件名选项！",
-                                });
-                            } else {
-                                // let a = application.getCustomData(
-                                //   this.item,
-                                //   this.settings.suffixes[this.rear],
-                                //   this.title
-                                // );
-                                // let a = "";
-                                // _push(this.regexDatas, {
-                                //   key: this.model[this.item],
-                                //   value: a,
-                                // });
-                                this.$emit('on-cancel');
+                switch (this.type) {
+                    case 0: // 用户自定义
+                        if (this.item < 5 && this.title.length == 0) {
+                            this.$Message.error({
+                                background: true,
+                                content: "请输入标题名称和连接符！"
+                            })
+                        } else if (this.item == 5 && !this.origin) {
+                            this.$Message.error({
+                                background: true,
+                                content: "匹配源为文件时才能使用匹配文件名选项！"
+                            })
+                        } else {
+                            let s = "";
+                            switch (this.item) {
+                                case 0:
+                                    s = this.title + CHARACTERS
+                                    break;
+                                case 1:
+                                    s = this.title + DIGIT
+                                    break;
+                                case 2:
+                                    s = CHARACTERS + this.title
+                                    break;
+                                case 3:
+                                    s = DIGIT + this.title
+                                    break;
+                                case 4:
+                                    s = this.title
+                                    break;
+                                case 5:
+                                    s = ".+"
+                                    break;
+                                case 6:
+                                    s = DIGIT
+                                    break;
+                                case 7:
+                                    s = CHARACTERS
+                                    break;
                             }
-                            break;
-                        case 1: // 自动生成
-                            if (this.fileName.length == 0) {
-                                this.$Message.error({
-                                    background: true,
-                                    content: "请选择需要生成表达式的文件！",
-                                });
-                            } else {
-                                // let a = "";
-                                // let a = application.getAutoData();
-                                // _push(this.regexDatas, {
-                                //   key: "自动匹配",
-                                //   value: a,
-                                // });
-                                this.$emit('on-cancel');
-                            }
-                            break;
-                        case 2: // 用户输入
-                            if (this.regex.length == 0) {
-                                this.$Message.error({
-                                    background: true,
-                                    content: "请输入正则表达式！",
-                                });
-                            } else {
-                                // _push(this.regexDatas, {
-                                //   key: "用户自定义",
-                                //   value: this.regex,
-                                // });
-                                this.$emit('on-cancel');
-                            }
-                            break;
-                        case 3: // 匹配全部
-                            this.lock = true;
-                            this.regexDatas.splice(0, this.regexDatas.length);
-                            this.regexDatas.push(WHOLE);
-                            this.$emit('on-cancel');
-                            break;
-                    }
+                            if (this.origin)
+                                s = s + this.$store.state.configs.suffixes[this.suffix]
+                            this.$store.commit('addRegExp', {
+                                key: this.model[this.item],
+                                value: s
+                            })
+                            this.$emit('on-cancel')
+                        }
+                        break;
+                    case 1: // 自动生成
+                        if (this.fileName.length == 0) {
+                            this.$Message.error({
+                                background: true,
+                                content: "请选择需要生成表达式的文件！"
+                            });
+                        } else {
+                            let a = this.fileName.lastIndexOf('\\')
+                            let b = this.fileName.lastIndexOf('.')
+                            let s = this.fileName.substring(b)
+                            let val = this.fileName.substring(a + 1, b)
+                                .replace(/[a-zA-Z]+/g, LETTER)
+                                .replace(/\d+/g, DIGIT)
+                                .replace(/[\u4e00-\u9fa5]+/g, CHARACTERS)
+                            this.$store.commit('addRegExp', {
+                                key: "自动匹配",
+                                value: val + s
+                            })
+                            this.$emit('on-cancel')
+                        }
+                        break;
+                    case 2: // 用户输入
+                        if (this.regex.length == 0) {
+                            this.$Message.error({
+                                background: true,
+                                content: "请输入正则表达式！",
+                            });
+                        } else {
+                            this.$store.commit('addRegExp', {
+                                key: "用户自定义",
+                                value: this.regex
+                            })
+                            this.$emit('on-cancel')
+                        }
+                        break;
+                    case 3: // 匹配全部
+                        this.$store.state.program.locked = true
+                        this.$store.commit('clearRegExp')
+                        this.$emit('on-cancel')
+                        break;
                 }
             },
             choose() {
-
+                let prop;
+                if (this.origin)
+                    prop = ['openFile']
+                else
+                    prop = ['openDirectory']
+                dialog.showOpenDialog({
+                    properties: prop
+                }).then(ret => {
+                    if (!ret.canceled)
+                        this.fileName = ret.filePaths.pop()
+                })
             },
-            selectChange(e) {
+            change(e) {
                 this.note = false;
                 switch (e) {
                     case 0: // 标题+姓名
@@ -203,8 +235,8 @@
                         this.statement = STATEMENT_3;
                         break;
                     default: // 其他情况
-                        this.statement = STATEMENT_4;
                         this.note = true;
+                        this.statement = STATEMENT_4;
                         break;
                 }
             }

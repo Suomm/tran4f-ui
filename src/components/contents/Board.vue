@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <RadioGroup v-model="$store.state.options[name]" size="large" vertical>
+        <RadioGroup v-model="value" size="large" vertical>
             <Collapse class="collapse" simple accordion>
                 <Panel v-for="o in items" :key="o.title">
                     {{ o.title }}
@@ -30,11 +30,23 @@
                     return [];
                 }
             }
+        },
+        computed: {
+            value() {
+                return this.$store.state.options[this.name]
+            }
         }
     }
 </script>
 
 <style scoped>
+    /* 操作类选项列表 */
+    .list {
+        width: 650px;
+        height: 450px;
+        overflow-y: scroll;
+    }
+
     /* 折叠面板样式 */
     .collapse {
         width: 650px;
