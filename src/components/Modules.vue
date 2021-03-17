@@ -7,7 +7,7 @@
         <p v-if="modules.length == 0" style="text-align:center">没有可用的模组</p>
         <List size="small">
             <ListItem v-for="e in modules" :key="e.name">
-                <ListItemMeta :title="e.name" :description="e.detail" />
+                <ListItemMeta :title="e.title" :description="e.description" />
                 <template slot="action">
                     <li>
                         <Button type="primary" size="small">查看</Button>&nbsp;
